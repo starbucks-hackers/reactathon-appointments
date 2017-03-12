@@ -35,17 +35,18 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
+functions:
   appointmentList: # Function name
-    handler: appointments/list.list # Reference to file handler.js & exported function 'users'
+    handler: appointments/get.list # Reference to file handler.js & exported function 'users'
     events: # All events associated with this function
       - http:
           path: api/appointments
           method: get
-  appointmentGet:
+  appointmentGet: # Function name
     handler: appointments/get.get # Reference to file handler.js & exported function 'users'
     events: # All events associated with this function
       - http:
-          path: api/appointment/{id}
+          path: api/appointment/{appointmentId}
           method: get
   appointmentCreate:
     handler: appointments/create.create # Reference to file handler.js & exported function 'users'
@@ -59,21 +60,29 @@ provider:
       - http:
           path: api/appointment/{id}
           method: delete
-
-
+  providerAppointmentsGet:
+    handler: appointments/get.getProviderAppointments
+    events:
+      - http:
+          path: api/appointments/provider/{providerId}
+          method: get
+  userAppointmentsGet:
+    handler: appointments/get.getUserAppointments
+    events:
+      - http:
+          path: api/appointments/user/{userId}
+          method: get
 resources:
   Resources:
-    TodosDynamoDbTable:
+    AppointmentsDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
-          -
-            AttributeName: id
+          - AttributeName: id
             AttributeType: S
         KeySchema:
-          -
-            AttributeName: id
+          - AttributeName: id
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 1
