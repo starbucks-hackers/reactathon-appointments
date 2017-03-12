@@ -58,7 +58,7 @@ functions:
     handler: appointments/delete.delete # Reference to file handler.js & exported function 'users'
     events: # All events associated with this function
       - http:
-          path: api/appointment/{id}
+          path: api/appointment/delete/{appointmentId}
           method: delete
   providerAppointmentsGet:
     handler: appointments/get.getProviderAppointments

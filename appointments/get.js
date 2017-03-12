@@ -1,9 +1,8 @@
 'use strict'
 
-const uuid = require('uuid');
 const AWS = require('aws-sdk');
 
-const dynamoDb = AWS.DynamoDB.DocumentClient();
+const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 module.exports.get = (event, context, callback) => {
   var appointmentId = event.pathParameters.appointmentId;
@@ -20,7 +19,7 @@ module.exports.get = (event, context, callback) => {
     // handle potential errors
     if (error) {
       consolse.error(error);
-      callback(new Error('Couldn\'t fetch the todo item.'));
+      callback(new Error('Couldn\'t fetch the appointment.'));
       return;
     }
 
@@ -43,7 +42,7 @@ module.exports.list = (event, context, callback) => {
     // handle potential errors
     if (error) {
       console.error(error);
-      callback(new Error('Couldn\'t fetch the Providers.'));
+      callback(new Error('Couldn\'t fetch the Appointments.'));
       return;
     }
 
@@ -66,10 +65,10 @@ module.exports.getProviderAppointments = (event, context, callback) => {
   };
 
   // fetch todo from the database
-  dynamoDb.get(params, (error, result) => {
+  dynamoDb.scan(params, (error, result) => {
     // handle potential errors
     if (error) {
-      consolse.error(error);
+      console.error(error);
       callback(new Error('Couldn\'t fetch the todo item.'));
       return;
     }
@@ -92,7 +91,7 @@ module.exports.getUserAppointments = (event, context, callback) => {
   };
 
   // fetch todo from the database
-  dynamoDb.get(params, (error, result) => {
+  dynamoDb.scan(params, (error, result) => {
     // handle potential errors
     if (error) {
       consolse.error(error);
